@@ -1,0 +1,100 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NFC Tag Scanner</title>
+</head>
+
+<body>
+
+    <button id="scanButton">Scan</button>
+    <button id="writeButton">Write</button>
+    <button id="makeReadOnlyButton">Make Read-Only</button>
+    <textarea readonly id="tagData" rows="4" cols="50" placeholder="Scanned NFC tag data will appear here"></textarea>
+
+    <script>
+        const tagDataTextArea = document.getElementById('tagData');
+        if (!("NDEFReader" in window))
+            tagDataTextArea.value = "Only works on android";
+
+        scanButton.addEventListener("click", async () => {
+            try {
+                const ndef = new NDEFReader();
+                await ndef.scan();
+
+                ndef.addEventListener("readingerror", () => {
+                    tagDataTextArea.value = "Reading error";
+                });
+
+                ndef.addEventListener("reading", ({ message, serialNumber }) => {
+                    tagDataTextArea.value = `Tag Serial Number: ${serialNumber}\n`;
+                    const decoder = new TextDecoder();
+                    for (const record of message.records) {
+                        tagDataTextArea.value += `Record Data: ${decoder.decode(record.data)}\n`;
+                    }
+                });
+            } catch (error) {
+                tagDataTextArea.value = error;
+            }
+        });
+
+        // writeButton.addEventListener("click", async () => {
+        //     log("User clicked write button");
+
+        //     try {
+        //         const ndef = new NDEFReader();
+        //         // await ndef.write("Hello world!");
+        //         // log("> Message written");
+        //     } catch (error) {
+        //         log("Argh! " + error);
+        //     }
+        // });
+
+        // makeReadOnlyButton.addEventListener("click", async () => {
+        //     log("User clicked make read-only button");
+
+        //     try {
+        //         const ndef = new NDEFReader();
+        //         // await ndef.makeReadOnly();
+        //         // log("> NFC tag has been made permanently read-only");
+        //     } catch (error) {
+        //         log("Argh! " + error);
+        //     }
+        // });
+        // Import the functions you need from the SDKs you need
+
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.3.0/firebase-app.js";
+
+        // TODO: Add SDKs for Firebase products that you want to use
+
+        // https://firebase.google.com/docs/web/setup#available-libraries
+
+
+        // Your web app's Firebase configuration
+
+        const firebaseConfig = {
+
+            apiKey: "AIzaSyCbidhRDyfRo7xpptIwN2_PfBFZBZm5VFg",
+
+            authDomain: "web-nfc-fa774.firebaseapp.com",
+
+            projectId: "web-nfc-fa774",
+
+            storageBucket: "web-nfc-fa774.appspot.com",
+
+            messagingSenderId: "522337687204",
+
+            appId: "1:522337687204:web:74a53176d0cd5cd7a83831"
+
+        };
+
+
+        // Initialize Firebase
+
+        const app = initializeApp(firebaseConfig);
+
+    </script>
+</body>
+
+</html>
