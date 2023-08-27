@@ -31,7 +31,7 @@
                     tagDataTextArea.value = `Tag Serial Number: ${serialNumber}\n`;
                     const decoder = new TextDecoder();
                     for (const record of message.records) {
-                        tagDataTextArea.value += `Record Data: ${decoder.decode(record.data)}\n`;
+                        tagDataTextArea.value += `${record.recordType}`;
                     }
                 });
             } catch (error) {
